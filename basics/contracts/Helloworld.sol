@@ -3,9 +3,13 @@ pragma solidity 0.8.12;
 
 contract Helloworld {
     string public message;
+    address public owner;
+
+    event messageEmitted();
 
     constructor(string memory _message) {
         message = _message;
+        owner = msg.sender;
     }
 
     function hello() public pure returns (string memory) {
@@ -13,7 +17,11 @@ contract Helloworld {
     }
 
     function setMessage(string memory _message) public payable {
-        require(msg.value >= 1 ether, "Condition not met");
+        require(
+            msg.sender >= owner,
+            "Only owner has permission to alter the state"
+        );
         message = _message;
+        emit messageEmitted();
     }
 }
